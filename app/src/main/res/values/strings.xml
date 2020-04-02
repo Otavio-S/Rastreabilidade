@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Rastreabilidade</string>
+    <string name="rastreabilidade">Rastreabilidade</string>
+    <string name="rastrear">Rastrear</string>
+    <string name="id_produto">ID produto</string>
+</resources>
