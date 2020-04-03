@@ -2,9 +2,11 @@ package com.projeto.rastreabilidade;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.projeto.rastreabilidade.contracts.Inicializacao;
+import com.projeto.rastreabilidade.contracts.Insercao;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -15,7 +17,6 @@ import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.DefaultGasProvider;
 
-import java.Insercao;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -55,30 +56,34 @@ public class RastreioActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        String titulo = "Produto " + idProd;
-        txProd.setText(titulo);
-
         int v = idProd % 10;
         if(v == 0) v = 10;
 
         String resultado= "";
         try {
             retorno = contratoInsercao.rastreioProd(String.valueOf(idProd), BigInteger.valueOf(v)).send();
+            System.out.println("HEY "+retorno.component1().get(1));
             for(int i = 1; i <= v; i++) {
-                 resultado = resultado.concat("Hash das Informações: " + retorno.component1().get(i) + "\n" +
-                        "Dia: " + retorno.component2().get(i) + "\n" +
-                        "Horário: " + retorno.component3().get(i) + "\n"+
-                        "Local: " + retorno.component4().get(i) + "\n" +
-                        "Endereço Sensor: " + retorno.component5().get(i) + "\n\n");
+                if(retorno.component1().get(1).equals("")) break;
+                resultado = resultado.concat("Hash das Informações: " + retorno.component1().get(i) + "\n" +
+                       "Dia: " + retorno.component2().get(i) + "\n" +
+                       "Horário: " + retorno.component3().get(i) + "\n"+
+                       "Local: " + retorno.component4().get(i) + "\n" +
+                       "Endereço Sensor: " + retorno.component5().get(i) + "\n\n");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         if(resultado.equals("")) {
-            resultado = "Produto não cadastrado!";
-            txShowResult.setText(resultado);
+            String titulo = "Código Inválido";
+            txProd.setText(titulo);
+
+            txShowResult.setVisibility(View.GONE);
         } else {
+            String titulo = "Produto " + idProd;
+            txProd.setText(titulo);
+
             txShowResult.setText(resultado);
         }
 
